@@ -1,0 +1,31 @@
+name: CI - Pipeline de Seguranca
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  snyk-security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Faz o checkout do código do repositório
+      - name: Checkout do codigo
+        uses: actions/checkout@v3
+
+      # 2. Configura o ambiente Java (necessário para projetos Maven)
+      - name: Configurar Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3. Executa o Scan SCA com a Action oficial do Snyk
+      - name: Executar Snyk para encontrar vulnerabilidades
+        uses: snyk/actions/maven@master
+        continue-on-error: true # Continua mesmo se encontrar vulnerabilidades, para vermos os resultados
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --all-projects --fail-on=upgradable # O build falhará se houver vulnerabilidades corrigíveis
