@@ -10,25 +10,23 @@ jobs:
   security-scan:
     runs-on: ubuntu-latest
     steps:
-      # 1. Faz o checkout do código do repositório
       - name: Checkout do codigo
         uses: actions/checkout@v3
 
-      # 2. Configura o ambiente Java (Isto resolve o erro de JAVA_HOME)
       - name: Configurar Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3. Configura o Node.js para instalar o Snyk
       - name: Configurar Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # 4. Instala o Snyk e executa o teste
       - name: Instalar e executar Snyk
+        # A linha abaixo corrige o problema. Altere "Cybersecurity" se o nome da sua pasta for outro.
+        working-directory: ./Cybersecurity
         run: |
           npm install -g snyk
           snyk test --fail-on=upgradable
