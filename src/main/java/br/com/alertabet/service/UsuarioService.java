@@ -39,7 +39,7 @@ public class UsuarioService {
         Usuario usuario = new Usuario();
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());
-        usuario.setSenha("123"); // senha padrão
+        usuario.setSenha("123"); // Senha padrão
 
         Usuario salvo = repository.save(usuario);
         return new UsuarioDTO(salvo.getId(), salvo.getNome(), salvo.getEmail());
@@ -94,7 +94,8 @@ public class UsuarioService {
      * @return token fictício de autenticação
      */
     public TokenResponseDTO login(LoginDTO loginDTO) {
-        Optional<Usuario> usuario = repository.findByEmail(loginDTO.email());
+        // A lógica de login agora usa o método vulnerável para demonstração.
+        Optional<Usuario> usuario = repository.findByEmailVulnerable(loginDTO.email());
 
         if (usuario.isPresent() && usuario.get().getSenha().equals(loginDTO.senha())) {
             return new TokenResponseDTO("fake-jwt-token");
