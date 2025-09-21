@@ -1,4 +1,4 @@
-name: CI - Pipeline de Seguranca (Versao Final)
+name: CI - Pipeline de Seguranca (Versao Definitiva)
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  snyk-security-scan:
+  security-scan:
     runs-on: ubuntu-latest
     steps:
       # 1. Faz o checkout do código do repositório
@@ -21,11 +21,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3. Executa o Scan SCA com a Action oficial do Snyk
-      - name: Executar Snyk para encontrar vulnerabilidades
-        uses: snyk/actions/maven@master
+      # 3. Configura o Node.js para instalar o Snyk
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 4. Instala o Snyk e executa o teste
+      - name: Instalar e executar Snyk
+        run: |
+          npm install -g snyk
+          snyk test --all-projects --fail-on=upgradable
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          # O argumento --all-projects resolve o problema do caminho
-          args: --all-projects --fail-on=upgradable
