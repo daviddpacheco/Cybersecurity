@@ -1,4 +1,4 @@
-name: CI - Pipeline de Seguranca (Versao Definitiva)
+name: CI - Pipeline de Seguranca (Correcao de Permissao)
 
 on:
   push:
@@ -14,20 +14,25 @@ jobs:
       - name: Checkout do codigo
         uses: actions/checkout@v3
 
-      # 2. Configura o ambiente Java
+      # 2. CORRIGIR PERMISSAO DO MVNW (Passo Chave!)
+      #    Corrige um problema comum do Git em Windows que remove a permissao de execucao
+      - name: Corrigir permissao do mvnw
+        run: chmod +x mvnw
+
+      # 3. Configura o ambiente Java
       - name: Configurar Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3. Configura o Node.js para instalar o Snyk
+      # 4. Configura o Node.js para instalar o Snyk
       - name: Configurar Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # 4. Instala o Snyk e executa o teste
+      # 5. Instala o Snyk e executa o teste
       - name: Instalar e executar Snyk
         run: |
           npm install -g snyk
