@@ -7,25 +7,30 @@ on:
     branches: [ "main" ]
 
 jobs:
-  snyk-security-scan:
+  security-scan:
     runs-on: ubuntu-latest
     steps:
       # 1. Faz o checkout do código do repositório
       - name: Checkout do codigo
         uses: actions/checkout@v3
 
-      # 2. Configura o ambiente Java (necessário para projetos Maven)
+      # 2. Configura o ambiente Java (Isto resolve o erro de JAVA_HOME)
       - name: Configurar Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3. Executa o Scan SCA com a Action oficial do Snyk
-      - name: Executar Snyk para encontrar vulnerabilidades
-        uses: snyk/actions/maven@master
-        continue-on-error: true # Continua mesmo se encontrar vulnerabilidades, para vermos os resultados
+      # 3. Configura o Node.js para instalar o Snyk
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 4. Instala o Snyk e executa o teste
+      - name: Instalar e executar Snyk
+        run: |
+          npm install -g snyk
+          snyk test --fail-on=upgradable
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --all-projects --fail-on=upgradable # O build falhará se houver vulnerabilidades corrigíveis
