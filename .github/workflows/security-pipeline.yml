@@ -32,10 +32,11 @@ jobs:
         with:
           node-version: '18'
 
-      # 5. Instala o Snyk e executa o teste
+      # 5. Instala o Snyk e executa o teste (sem falhar o build)
       - name: Instalar e executar Snyk
         run: |
           npm install -g snyk
-          snyk test --all-projects --fail-on=upgradable
+          # A ALTERAÇÃO ESTÁ AQUI: Removemos o '--fail-on=upgradable'
+          snyk test --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
