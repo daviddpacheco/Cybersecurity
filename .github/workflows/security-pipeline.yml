@@ -1,4 +1,4 @@
-name: Pipeline Simples de Seguranca
+name: Pipeline de Seguranca - Sprint 4
 
 on:
   push:
@@ -18,12 +18,11 @@ jobs:
       - name: Dar permissao ao Maven
         run: chmod +x ./mvnw
 
-      # Passo 3: Executar o Snyk e IGNORAR se ele encontrar erros
-      - name: Executar Snyk (e ignorar erros)
+      # Passo 3: Executar o Snyk
+      - name: Executar Snyk para validar correcoes
         uses: snyk/actions/maven@master
-        continue-on-error: true # <-- ISTO É O QUE FORÇA O SUCESSO
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          # Analisa todos os projetos e reporta vulnerabilidades
           args: --all-projects
