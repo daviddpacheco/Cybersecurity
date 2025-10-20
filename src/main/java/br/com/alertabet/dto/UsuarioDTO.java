@@ -1,10 +1,15 @@
 package br.com.alertabet.dto;
 
-/**
- * DTO que representa os dados do usuário.
- *
- * @param id    Identificador único do usuário.
- * @param nome  Nome do usuário.
- * @param email Email do usuário.
- */
-public record UsuarioDTO(Long id, String nome, String email) {}
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record UsuarioDTO(
+        Long id,
+
+        @NotBlank(message = "O nome é obrigatório")
+        String nome,
+
+        @NotBlank(message = "O e-mail é obrigatório")
+        @Email(message = "Formato de e-mail inválido")
+        String email
+) {}
