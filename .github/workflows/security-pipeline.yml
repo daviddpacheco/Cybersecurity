@@ -15,7 +15,6 @@ jobs:
         uses: actions/checkout@v3
 
       # 2. CORRIGIR PERMISSAO DO MVNW (Passo Chave!)
-      #    Corrige um problema comum do Git em Windows que remove a permissao de execucao
       - name: Corrigir permissao do mvnw
         run: chmod +x mvnw
 
